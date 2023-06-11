@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+option go_package = ".;weatherpb";
+package weather.v1;
+
+service WeatherService {
+    rpc Geocode(GeocodeRequest) returns (GeocodeResponse) {}
+    rpc Weather(WeatherRequest) returns (WeatherResponse) {}
+    rpc Plan(PlanRequest) returns (PlanResponse) {}
+}
+
+message GeocodeRequest {
+    string location = 1;
+}
+
+message GeocodeResponse {
+    double latitude = 1;
+    double longitude = 2;
+    string formatted_address = 3;
+}
+
+message WeatherRequest {
+    int64 time = 1;
+    string location = 2;
+    string units = 3;
+}
+
+message WeatherResponse {
+    string location = 1;
+    double latitude = 2;
+    double longitude = 3;
+    Currently currently = 4;
+    Forecast forecast = 5;
+    repeated Alert alerts = 6;
+}
+
+message PlanRequest {
+    string location = 1;
+    bool daylight = 2;
+    DataRange wind = 3;
+    DataRange wind_gust = 5;
+    DataRange temperature = 6;
+    bool precipitation = 7;
+    string units = 8;
+    int32 duration = 9;
+}
+
+message DataRange {
+    double min = 1;
+    double max = 2;
+}
+
+message PlanResponse {
+    string location = 1;
+    double latitude = 2;
+    double longitude = 3;
+    repeated Hour hours = 4;
+    string units = 5;
+    int64 generated_at = 6;
+}
+
+message Currently {
+    string description = 1;
+    string summary = 2;
+    Data data = 3;
+}
+
+message Forecast {
+    string summary = 1;
+    repeated Day days = 2;
+}
+
+message Day {
+    string weekday = 1;
+    string summary = 2;
+    Data data = 3;
+}
+
+message Hour {
+    Data data = 3;
+}
+
+message Data {
+    string dew_point = 1;
+    string feels_like = 2;
+    string humidity = 3;
+    string icon = 4;
+    string precipitation_probability = 5;
+    string precipitation_type = 6;
+    string pressure = 7;
+    string temperature = 8;
+    string temperature_high = 9;
+    string temperature_low = 10;
+    int64 timestamp = 11;
+    string wind = 12;
+}
+
+message Alert {
+    string message = 1;
+    string severity = 2;
+    string uri = 3;
+}

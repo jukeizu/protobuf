@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option go_package = ".;selectionpb";
+package selection.v1;
+
+service SelectionService {
+    rpc CreateSelection(CreateSelectionRequest) returns (CreateSelectionResponse) {}
+    rpc ParseSelection(ParseSelectionRequest) returns (ParseSelectionResponse) {}
+}
+
+message CreateSelectionRequest {
+    string app_id = 1;
+    string instance_id = 2;
+    string user_id = 3;
+    string server_id = 4;
+    bool randomize = 5;
+    int32 batch_size = 6;
+    string sort_method = 7;
+    string sort_key = 8;
+    repeated Option options = 9;
+}
+
+message Option {
+    string option_id = 1;
+    string content = 2;
+    map<string, string> metadata = 3;
+}
+
+message CreateSelectionResponse {
+    repeated Batch batches = 1;
+}
+
+message Batch {
+    repeated BatchOption options = 1;
+}
+
+message BatchOption {
+    int32 number = 1;
+    Option option = 2;
+}
+
+message ParseSelectionRequest {
+    string app_id = 1;
+    string instance_id = 2;
+    string user_id = 3;
+    string server_id = 4;
+    string content = 5;
+}
+
+message RankedOption {
+    int32 rank = 1;
+    Option option = 2;
+    int32 number = 3;
+}
+
+message ParseSelectionResponse {
+    repeated RankedOption ranked_options = 1;
+}

@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+option go_package = ".;votingpb";
+package voting.v1;
+
+service VotingService {
+    rpc CreatePoll(CreatePollRequest) returns (CreatePollResponse) {}
+    rpc Poll(PollRequest) returns (PollResponse) {}
+    rpc VoterPoll(VoterPollRequest) returns (VoterPollResponse) {}
+    rpc EndPoll(EndPollRequest) returns (EndPollResponse) {}
+    rpc OpenPoll(OpenPollRequest) returns (OpenPollResponse) {}
+    rpc Status(StatusRequest) returns (StatusResponse) {}
+    rpc Voters(VotersRequest) returns (stream VotersResponse) {}
+    rpc Vote(VoteRequest) returns (VoteResponse) {}
+    rpc Count(CountRequest) returns (CountResponse) {}
+    rpc Export(ExportRequest) returns (ExportResponse) {}
+}
+
+message CreatePollRequest {
+    string server_id = 1;
+    string creator_id = 2;
+    string title = 3;
+    int32 allowed_unique_votes = 4;
+    repeated Option options = 5;
+    int64 expires = 6;
+}
+
+message CreatePollResponse {
+    Poll poll = 1;
+}
+
+message Option {
+    string id = 1;
+    string content = 2;
+    string url = 3;
+}
+
+message PollRequest {
+    string short_id = 1;
+    string server_id = 2;
+    string voter_id = 3;
+}
+
+message VoterPollRequest {
+    string voter_id = 1;
+    string server_id = 2;
+}
+
+message PollResponse {
+    Poll poll = 1;
+}
+
+message VoterPollResponse {
+    Poll poll = 1;
+}
+
+
+message Poll {
+    string id = 1;
+    string short_id = 2;
+    string server_id = 3;
+    string creator_id = 4;
+    string title = 5;
+    int32 allowed_unique_votes = 6;
+    bool has_ended = 7;
+    repeated Option options = 8;
+    int64 expires = 9;
+}
+
+message EndPollRequest {
+    string short_id = 1;
+    string server_id = 2;
+    string requester_id = 3;
+}
+
+message EndPollResponse {
+    Poll poll = 1;
+}
+
+message OpenPollRequest {
+    string short_id = 1;
+    string server_id = 2;
+    string requester_id = 3;
+    int64 expires = 4;
+}
+
+message OpenPollResponse {
+    Poll poll = 1;
+    bool previously_ended = 2;
+    int64 previous_expiration = 3;
+}
+
+message StatusRequest {
+    string short_id = 1;
+    string server_id = 2;
+}
+
+message Voter {
+    string id = 1;
+    string username = 2;
+    string external_id = 3;
+}
+
+message VotersResponse {
+    string id = 1;
+    string username = 2;
+    string external_id = 3;
+}
+
+message StatusResponse {
+    Poll poll = 1;
+    int64 voter_count = 2;
+}
+
+message VotersRequest {
+    string short_id = 1;
+    string server_id = 2;
+}
+
+message BallotOption {
+    int32 rank = 1;
+    string option_id = 2;
+}
+
+message VoteRequest {
+    string short_id = 1;
+    string server_id = 2;
+    Voter voter = 3;
+    repeated BallotOption options = 4;
+}
+
+message VoteResponse {
+    bool success = 1;
+    string message = 2;
+    repeated VoteResponseOption options = 3;
+}
+
+message VoteResponseOption {
+    int32 rank = 1;
+    Option option = 2;
+}
+
+message CountRequest {
+    string short_id = 1;
+    string server_id = 2;
+    int32 num_to_elect = 3;
+    string method = 4;
+    repeated string to_exclude = 5;
+}
+
+message ExportRequest {
+    string short_id = 1;
+    string server_id = 2;
+    int32 num_to_elect = 3;
+    string method = 4;
+    repeated string to_exclude = 5;
+}
+
+message ExportResponse {
+    string content = 1;
+    Poll poll = 2;
+    string method = 3;
+}
+
+message CountResponse {
+    bool success = 1;
+    string message = 2;
+    Poll poll = 3;
+    string method = 4;
+    repeated VoteResponseOption elected = 5;
+    repeated CountEvent events = 6;
+    repeated RoundSummary rounds = 7;
+}
+
+message CountEvent {
+    string type = 1;
+    string description = 2;
+}
+
+message RoundSummary {
+    int32 number = 1;
+    int64 excess = 2;
+    int64 surplus = 3;
+    int64 quota = 4;
+    repeated CandidateSummary candidates = 5;
+}
+
+message CandidateSummary {
+    string id = 1;
+    string name = 2;
+    int32 rank = 3;
+    int64 votes = 4;
+    int64 weight = 5;
+    string status = 6;
+}
