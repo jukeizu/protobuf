@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;metricspb";
+package metrics.v1;
+
+service MetricsService {
+    rpc CreateInteraction(CreateInteractionRequest) returns (CreateInteractionResponse) {}
+    rpc QueryInteractions(QueryInteractionsRequest) returns (stream QueryInteractionsResponse) {}
+}
+
+message CreateInteractionRequest  {
+    string id = 1;
+    string name = 2;
+    string type = 3;
+    string app_id = 4;
+    string server_id = 5;
+    string channel_id = 6;
+    string user_id = 7;
+    string trace_id = 8;
+    google.protobuf.Timestamp timestamp = 9;
+}
+
+message CreateInteractionResponse {
+    string metric_id = 1;
+}
+
+message QueryInteractionsRequest  {
+    string id = 1;
+    string name = 2;
+    string type = 3;
+    string app_id = 4;
+    string server_id = 5;
+    string channel_id = 6;
+    string user_id = 7;
+    string trace_id = 8;
+    google.protobuf.Timestamp from = 9;
+    google.protobuf.Timestamp to = 10;
+}
+
+message QueryInteractionsResponse {
+    string metric_id = 1;
+    string id = 2;
+    string name = 3;
+    string type = 4;
+    string app_id = 5;
+    string server_id = 6;
+    string channel_id = 7;
+    string user_id = 8;
+    string trace_id = 9;
+    google.protobuf.Timestamp timestamp = 10;
+}
