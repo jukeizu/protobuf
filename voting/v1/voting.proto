@@ -7,6 +7,7 @@ service VotingService {
     rpc CreatePoll(CreatePollRequest) returns (CreatePollResponse) {}
     rpc Poll(PollRequest) returns (PollResponse) {}
     rpc VoterPoll(VoterPollRequest) returns (VoterPollResponse) {}
+    rpc VoterBallot(VoterBallotRequest) returns (VoterBallotResponse) {}
     rpc EndPoll(EndPollRequest) returns (EndPollResponse) {}
     rpc OpenPoll(OpenPollRequest) returns (OpenPollResponse) {}
     rpc Status(StatusRequest) returns (StatusResponse) {}
@@ -54,6 +55,15 @@ message VoterPollResponse {
     Poll poll = 1;
 }
 
+message VoterBallotRequest {
+    string short_id = 1;
+    string server_id = 2;
+    string voter_id = 3;
+}
+
+message VoterBallotResponse {
+    repeated BallotOption options = 1;
+}
 
 message Poll {
     string id = 1;
