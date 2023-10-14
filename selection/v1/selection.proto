@@ -6,6 +6,7 @@ package selection.v1;
 service SelectionService {
     rpc CreateSelection(CreateSelectionRequest) returns (CreateSelectionResponse) {}
     rpc ParseSelection(ParseSelectionRequest) returns (ParseSelectionResponse) {}
+    rpc QuerySelection(QuerySelectionRequest) returns (QuerySelectionResponse) {}
 }
 
 message CreateSelectionRequest {
@@ -45,6 +46,19 @@ message ParseSelectionRequest {
     string user_id = 3;
     string server_id = 4;
     string content = 5;
+}
+
+message QuerySelectionRequest {
+    string app_id = 1;
+    string instance_id = 2;
+    string user_id = 3;
+    string server_id = 4;
+    map<string, int32> options = 5;
+}
+
+message QuerySelectionResponse {
+    repeated RankedOption options = 1;
+    string content = 2;
 }
 
 message RankedOption {
